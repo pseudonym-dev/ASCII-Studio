@@ -18,6 +18,7 @@ const FONT_PX = 20;
 const BASE_Y = 15.56; // must match web/src/render.js so glyph coverage stays in sync
 const FONT_NAME = "DejaVu Sans Mono";
 const FONT_PATHS = [
+  ...(process.env.DEJAVU_MONO ? [process.env.DEJAVU_MONO] : []),
   "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf",
   "/usr/share/fonts/TTF/DejaVuSansMono.ttf",
   "/usr/share/fonts/dejavu/DejaVuSansMono.ttf",
@@ -25,8 +26,11 @@ const FONT_PATHS = [
 
 const examples = [
   { id: "toucan", file: "example-toucan.mp4" },
-  { id: "macaw", file: "example-macaw.mp4" },
-  { id: "chameleon", file: "example-chameleon.mp4" },
+  { id: "dancer", file: "example-dancer.mp4" },
+  { id: "horse", file: "example-horse.mp4" },
+  { id: "fire", file: "example-fire.mp4" },
+  { id: "koi", file: "example-koi.mp4" },
+  { id: "jellyfish", file: "example-jellyfish.mp4" },
 ];
 
 /** @param {string} spec */

@@ -7,10 +7,6 @@ clownfish-real.jpg
            https://creativecommons.org/licenses/by-sa/3.0/
   Notes:  Featured picture on Wikimedia Commons. 1803×2254, JPEG.
 
-web/assets/demo.jpg
-  Same photograph as clownfish-real.jpg (Nick Hobgood, CC BY-SA 3.0), resized
-  to 1000×1250 and saved as a smaller JPEG. Used as the in-app Sample image.
-
 clownfish-video.mp4
   Title:  Weissrücken-Anemonenfisch - Amphiprion akallopisos.webm
   Author: Amada44
@@ -24,41 +20,55 @@ testsrc.mp4
   Generated locally with ffmpeg (testsrc pattern), 640x360, 12 fps, 3 s.
 
 example-toucan.mp4
-  Title:  Toco toucan (Pixabay: "Toucan, Bird, Tree")
+  Title:  Toucan, Bird, Beak
   Author: Eaktas06
-  Source: https://pixabay.com/videos/tucano-p%C3%A1ssaro-%C3%A1rvore-verde-171255/
+  Source: https://pixabay.com/videos/toucan-bird-beak-feathers-plumage-150714/
   License: Pixabay Content License
            https://pixabay.com/service/license-summary/
-  Notes:  4 s excerpt starting at 20.75 s of the original 31.1 s clip, scaled
-          to 480×270, 24 fps, no audio, H.264. Locked-off profile of a Toco
-          toucan on a branch. Used as the "Toco toucan" example in ASCII Studio.
-          Author username verified on the Pixabay page.
+  Notes:  5 s excerpt starting at 13.6 s of the original, scaled to 480×270,
+          24 fps, no audio, H.264.
 
-example-macaw.mp4
-  Title:  Scarlet macaw close-up (Pixabay: "Red Parrot, Talking Parrot")
-  Author: ahrordzon
-  Source: https://pixabay.com/videos/red-parrot-talking-parrot-114146/
+example-dancer.mp4
+  Title:  Woman, Girl, Dancer (2D cartoon)
+  Author: agus252
+  Source: https://pixabay.com/videos/woman-girl-dancer-2d-cartoon-140638/
   License: Pixabay Content License
            https://pixabay.com/service/license-summary/
-  Notes:  2.5 s excerpt starting at 5.50 s of the original, played forward then
-          reversed (ping-pong, ~5 s seamless). 480×270, 24 fps, no audio, H.264.
-          Used as the "Scarlet macaw" example in ASCII Studio.
+  Notes:  5 s excerpt starting at 0 s of the original, scaled to 480×270,
+          24 fps, no audio, H.264.
 
-example-chameleon.mp4
-  Title:  Chameleon (Pixabay: "Chameleon, Reptile, Animal") — Editor's Choice
-  Author: xBriantcx
-  Source: https://pixabay.com/videos/chameleon-reptile-animal-green-233037/
+example-horse.mp4
+  Title:  Horse, Run, Meadow
+  Author: Yocchi09
+  Source: https://pixabay.com/videos/horse-run-meadow-animal-natural-330880/
   License: Pixabay Content License
            https://pixabay.com/service/license-summary/
-  Notes:  5 s excerpt starting at 15 s of the original 29.6 s 4K clip, scaled
-          to 480×270, 24 fps, no audio, H.264. Locked-off macro of a veiled
-          chameleon's eye and scales. Used as the "Chameleon" example in
-          ASCII Studio.
+  Notes:  5 s excerpt starting at 0 s of the original, scaled to 480×270,
+          24 fps, no audio, H.264.
 
-web/assets/examples/{toucan,macaw,chameleon}.bin.gz
-  Pre-rendered ASCII grids of the three example clips (158 columns × 59 rows,
-  12 fps, color, edge gain 1.10×, subject separation off). Packed and gzipped.
-  Same authors and licenses as the source clips; they are adaptations of those
-  videos. The committed grids were packed from 960 px intermediates of the same
-  trims; the in-repo samples are 480 px so the single-file page stays under 3 MB.
-  Rebuild from the in-repo clips with `node tools/pack-examples.mjs`.
+example-fire.mp4
+  Title:  Fire, Flames, Wood
+  Author: NickyPe
+  Source: https://pixabay.com/videos/fire-flames-wood-burn-campfire-192687/
+  License: Pixabay Content License
+           https://pixabay.com/service/license-summary/
+  Notes:  4 s excerpt starting at 10 s of the original, scaled to 480×270,
+          24 fps, no audio, H.264.
+
+example-koi.mp4
+  Title:  Koi Fish, Fish, Japanese
+  Author: Paul_Tran
+  Source: https://pixabay.com/videos/koi-fish-fish-japanese-pond-nature-48287/
+  License: Pixabay Content License
+           https://pixabay.com/service/license-summary/
+  Notes:  4 s excerpt starting at 0 s of the original, scaled to 480×270,
+          24 fps, no audio, H.264.
+
+example-jellyfish.mp4
+  Title:  Jellyfish, Aquarium, Exhibition
+  Author: christianbodhi
+  Source: https://pixabay.com/videos/jellyfish-aquarium-exhibition-213616/
+  License: Pixabay Content License
+           https://pixabay.com/service/license-summary/
+  Notes:  5 s excerpt starting at 6 s of the original, scaled to 480×270,
+          24 fps, no audio, H.264.

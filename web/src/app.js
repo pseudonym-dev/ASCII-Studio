@@ -166,6 +166,7 @@ function applyLookDefaults() {
   $("zoomVal").textContent = zoomLabel(d.zoom);
   $("edges").value = String(d.edges);
   $("edgesVal").textContent = edgesLabel(d.edges);
+  fillRanges();
 }
 
 /** Enable or disable the sidebar controls. The close button stays usable on a narrow screen. @param {boolean} on */
@@ -238,15 +239,34 @@ async function loadFile(file) {
   }
 }
 
-async function loadDemo() {
-  stickyStatus = false;
-  const seq = loadSeq;
-  const blob = await (await fetch(__DEMO_URL__)).blob();
-  if (seq !== loadSeq) return;
-  if (!await loadImageBlob(blob, "sample")) return;
-  $("foot").textContent = "Sample: clownfish photo (Hobgood, CC BY-SA 3.0). The downloaded .txt is plain ASCII (no colour).";
-  enterEditor();
+/** Paint the filled part of a range track (Chrome has no native progress pseudo-element). @param {HTMLInputElement} el */
+function fillRange(el) { el.style.setProperty("--p", `${((+el.value - +el.min) / (+el.max - +el.min)) * 100}%`); }
+function fillRanges() { for (const id of ["density", "edges", "zoom"]) fillRange(/** @type {HTMLInputElement} */ ($(id))); }
+document.addEventListener("input", (e) => { if (e.target instanceof HTMLInputElement && e.target.type === "range") fillRange(e.target); });
+fillRanges();
+
+for (const tab of document.querySelectorAll("[data-tab]")) {
+  tab.addEventListener("click", () => {
+    for (const t of document.querySelectorAll("[data-tab]")) t.setAttribute("aria-selected", String(t === tab));
+    for (const p of document.querySelectorAll("[data-panel]")) /** @type {HTMLElement} */ (p).hidden = p.getAttribute("data-panel") !== tab.getAttribute("data-tab");
+  });
 }
+
+$("themeBtn").addEventListener("click", () => {
+  const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+  document.documentElement.dataset.theme = next;
+  try { localStorage.setItem("theme", next); } catch { /* private mode: theme lasts for this visit */ }
+});
+
+// Star count is a nice-to-have: any failure (offline, rate limit) just leaves the plain "Star" button.
+fetch("https://api.github.com/repos/pseudonym-dev/ASCII-Studio")
+  .then((r) => (r.ok ? r.json() : null))
+  .then((repo) => {
+    if (typeof repo?.stargazers_count !== "number") return;
+    $("ghStars").textContent = new Intl.NumberFormat("en", { notation: "compact" }).format(repo.stargazers_count);
+    $("ghStars").hidden = false;
+  })
+  .catch(() => {});
 
 const redrawSoon = (() => { let raf = 0; return () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(draw); }; })();
 
@@ -258,8 +278,6 @@ for (const id of ["mono", "glow"]) $(id).addEventListener("click", () => { setPr
 $("sep").addEventListener("click", () => { setPressed($("sep"), !isPressed($("sep"))); runner.request(undefined); });
 $("file").addEventListener("change", () => { const f = $("file").files[0]; $("file").value = ""; loadFile(f); });
 for (const id of ["fileBtn", "homeFileBtn"]) $(id).addEventListener("keydown", (/** @type {KeyboardEvent} */ e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); $("file").click(); } });
-$("demoBtn").addEventListener("click", loadDemo);
-$("newBtn").addEventListener("click", resetSession);
 $("homeBtn").addEventListener("click", resetSession);
 /** @param {boolean} on */
 const markDrag = (on) => {

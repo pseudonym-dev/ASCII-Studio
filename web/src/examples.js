@@ -86,7 +86,7 @@ export function mountExamples(openFile, generation = () => 0) {
     link.rel = "noopener noreferrer";
     link.textContent = clip.credit;
     link.addEventListener("click", (e) => e.stopPropagation());
-    cap.append(title, document.createTextNode(" — "), link);
+    cap.append(title, link);
     fig.append(canvas, cap);
 
     /** @type {import("./clip.js").PackedClip | null} */

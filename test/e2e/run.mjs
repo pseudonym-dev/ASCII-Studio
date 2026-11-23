@@ -78,7 +78,7 @@ try {
   check("the example opens at the starting look, with separation off for video", await b.ev("document.getElementById('density').value === '158' && document.getElementById('zoom').value === '85' && document.getElementById('edges').value === '110' && document.getElementById('glow').getAttribute('aria-pressed') === 'true' && document.getElementById('mono').getAttribute('aria-pressed') === 'false' && document.getElementById('sep').getAttribute('aria-pressed') === 'false'"));
   check("examples are hidden in the editor", await b.ev("getComputedStyle(document.getElementById('home')).display === 'none' && getComputedStyle(document.getElementById('stage')).display !== 'none'"));
   check("loading an example enables the sidebar controls", await b.ev("!document.getElementById('sidebarControls').inert && document.getElementById('sidebarControls').getAttribute('aria-disabled') === 'false' && !document.getElementById('density').disabled && !document.getElementById('glow').disabled"));
-  check("choose file and export live in the top bar", await b.ev("document.getElementById('topbar').contains(document.getElementById('fileBtn')) && document.getElementById('topbar').contains(document.getElementById('demoBtn')) && document.getElementById('topbar').contains(document.getElementById('newBtn')) && document.getElementById('topbar').contains(document.getElementById('exportBtn')) && getComputedStyle(document.getElementById('fileBtn')).display !== 'none'"));
+  check("choose file and export live in the top bar", await b.ev("document.getElementById('topbar').contains(document.getElementById('fileBtn')) && document.getElementById('topbar').contains(document.getElementById('exportBtn')) && getComputedStyle(document.getElementById('fileBtn')).display !== 'none'"));
   check("adjust settings live in the sidebar, not the transport", await b.ev("document.getElementById('sidebar').contains(document.getElementById('density')) && document.getElementById('sidebar').contains(document.getElementById('fmt')) && !document.getElementById('sidebar').contains(document.getElementById('playBtn'))"));
   check("menu button is hidden on a wide window", await b.ev("getComputedStyle(document.getElementById('menuBtn')).display === 'none'"));
   await sleep(400);
@@ -87,9 +87,9 @@ try {
   await setValue("density", 60);
   await click("glow");
   check("the look can be changed in the editor", await b.ev("document.getElementById('density').value === '60' && document.getElementById('glow').getAttribute('aria-pressed') === 'false'"));
-  await click("newBtn");
-  check("New returns to the home screen and clears the session", await waitFor("ASCII.mode === 'home' && document.getElementById('videoBar').hidden && (ASCII.stats.renders || 0) === 0 && document.getElementById('sourceVideo').paused", 5000), await b.ev("ASCII.mode + ' renders=' + (ASCII.stats.renders || 0)"));
-  check("New restores the starting look and disables the sidebar", await b.ev(defaultLook + " && " + sidebarIdle), await b.ev("['density','zoom','edges'].map((id)=>document.getElementById(id).value).join(',') + ' glow=' + document.getElementById('glow').getAttribute('aria-pressed') + ' inert=' + document.getElementById('sidebarControls').inert"));
+  await click("homeBtn");
+  check("The title returns to the home screen and clears the session", await waitFor("ASCII.mode === 'home' && document.getElementById('videoBar').hidden && (ASCII.stats.renders || 0) === 0 && document.getElementById('sourceVideo').paused", 5000), await b.ev("ASCII.mode + ' renders=' + (ASCII.stats.renders || 0)"));
+  check("The title restores the starting look and disables the sidebar", await b.ev(defaultLook + " && " + sidebarIdle), await b.ev("['density','zoom','edges'].map((id)=>document.getElementById(id).value).join(',') + ' glow=' + document.getElementById('glow').getAttribute('aria-pressed') + ' inert=' + document.getElementById('sidebarControls').inert"));
 
   await b.ev("document.querySelector('#exampleGrid figure').click()");
   await click("homeBtn");

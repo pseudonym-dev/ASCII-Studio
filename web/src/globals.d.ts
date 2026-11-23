@@ -1,5 +1,4 @@
 declare const __WORKER_SOURCE__: string;
-declare const __DEMO_URL__: string;
 declare const __EXAMPLES__: {
   title: string;
   credit: string;
