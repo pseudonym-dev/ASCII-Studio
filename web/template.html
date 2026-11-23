@@ -150,6 +150,8 @@
     a.btn { text-decoration: none; }
     .ic-fill { fill: currentColor; stroke: none; }
     .btn.secondary.gh .ic { color: var(--text-primary); }
+    .btn.secondary.sponsor .ic { color: #db61a2; }
+    .btn.secondary.sponsor:hover .ic { fill: #db61a2; }
     .gh-count {
       display: inline-flex; align-items: center; gap: 4px; margin-left: 4px; padding-left: 10px; height: 20px;
       box-shadow: inset 1px 0 0 var(--border-primary); color: var(--text-tertiary); font-weight: 500; font-variant-numeric: tabular-nums;
@@ -420,6 +422,7 @@
     <button type="button" class="brand" id="homeBtn"><span class="brand-mark" aria-hidden="true">A_</span><span class="brand-name">ASCII Studio</span></button>
     <span class="spacer"></span>
     <a class="btn secondary gh" id="ghBtn" href="https://github.com/pseudonym-dev/ASCII-Studio" target="_blank" rel="noopener"><svg class="ic ic-fill"><use href="#i-github"/></svg><span class="gh-label">Star on GitHub</span><span class="gh-count" id="ghStars" hidden></span></a>
+    <a class="btn secondary sponsor" href="https://github.com/sponsors/pseudonym-dev" target="_blank" rel="noopener" aria-label="Sponsor on GitHub"><svg class="ic"><use href="#i-heart"/></svg><span class="gh-label">Sponsor</span></a>
     <button id="themeBtn" class="btn icon" type="button" aria-label="Switch theme" data-tip="Light / dark"><svg class="ic theme-dark"><use href="#i-sun"/></svg><svg class="ic theme-light"><use href="#i-moon"/></svg></button>
     <label class="btn secondary" for="file" id="fileBtn" tabindex="0"><svg class="ic"><use href="#i-upload"/></svg>Choose file</label>
     <div id="topExport" hidden>
