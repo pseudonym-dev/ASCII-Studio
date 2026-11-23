@@ -18,14 +18,16 @@ npm run build       # writes web/ascii-studio.html from web/src, web/template.ht
 
 Open `web/ascii-studio.html` in a browser. The built page is a single self-contained file.
 
+To rebuild the packed example grids from the clips in `samples/`, run `node tools/pack-examples.mjs` (needs `ffmpeg` and `@napi-rs/canvas`).
+
 ## Credits
 
 Full source and license notes for sample media are in `samples/SOURCES.txt`.
 
 - Sample photo (`web/assets/demo.jpg`, also `samples/clownfish-real.jpg`) — Nick Hobgood, clownfish (*Amphiprion ocellaris*) in a magnificent sea anemone, East Timor. [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Anemone_purple_anemonefish.jpg), **CC BY-SA 3.0**. The file on the page is a smaller JPEG of that photograph.
-- “Clownfish” example — Amada44, *Weissrücken-Anemonenfisch*. [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Weissr%C3%BCcken-Anemonenfisch_-_Amphiprion_akallopisos.webm), **CC BY-SA 3.0**.
-- “Scissor dance, Peru” example — Chris Gill. [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Scissor_Dance,_Peru.webm), **CC BY 3.0**.
-- “Fireplace” example — BrillLyle. [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:ABOedit2015-Video-Fire.webm), **CC0 1.0**.
+- “Toco toucan” example — Eaktas06. [Pixabay](https://pixabay.com/videos/tucano-p%C3%A1ssaro-%C3%A1rvore-verde-171255/), **Pixabay Content License**.
+- “Scarlet macaw” example — ahrordzon. [Pixabay](https://pixabay.com/videos/red-parrot-talking-parrot-114146/), **Pixabay Content License**.
+- “Chameleon” example — xBriantcx. [Pixabay](https://pixabay.com/videos/chameleon-reptile-animal-green-233037/), **Pixabay Content License**.
 
 The on-page example clips are pre-rendered ASCII grids of those videos (same authors and licenses). Credits also appear under each clip.
 

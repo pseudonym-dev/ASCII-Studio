@@ -23,28 +23,42 @@ clownfish-video.mp4
 testsrc.mp4
   Generated locally with ffmpeg (testsrc pattern), 640x360, 12 fps, 3 s.
 
-example-sea.mp4
-  Same source as clownfish-video.mp4 (Amada44, CC BY-SA 3.0). 4 s, 480×270, 24 fps, no audio, H.264.
-  Used as the "Clownfish" example in ASCII Studio (click to open in the editor).
+example-toucan.mp4
+  Title:  Toco toucan (Pixabay: "Toucan, Bird, Tree")
+  Author: Eaktas06
+  Source: https://pixabay.com/videos/tucano-p%C3%A1ssaro-%C3%A1rvore-verde-171255/
+  License: Pixabay Content License
+           https://pixabay.com/service/license-summary/
+  Notes:  4 s excerpt starting at 20.75 s of the original 31.1 s clip, scaled
+          to 480×270, 24 fps, no audio, H.264. Locked-off profile of a Toco
+          toucan on a branch. Used as the "Toco toucan" example in ASCII Studio.
+          Author username verified on the Pixabay page.
 
-example-dance.mp4
-  Title:  Scissor Dance, Peru
-  Author: Chris Gill
-  Source: https://commons.wikimedia.org/wiki/File:Scissor_Dance,_Peru.webm
-  License: CC BY 3.0
-           https://creativecommons.org/licenses/by/3.0/
-  Notes:  4 s excerpt starting at 12 s of the original, scaled to 480 px wide, 24 fps, no audio, H.264.
-          Used as the "Scissor dance, Peru" example in ASCII Studio.
+example-macaw.mp4
+  Title:  Scarlet macaw close-up (Pixabay: "Red Parrot, Talking Parrot")
+  Author: ahrordzon
+  Source: https://pixabay.com/videos/red-parrot-talking-parrot-114146/
+  License: Pixabay Content License
+           https://pixabay.com/service/license-summary/
+  Notes:  2.5 s excerpt starting at 5.50 s of the original, played forward then
+          reversed (ping-pong, ~5 s seamless). 480×270, 24 fps, no audio, H.264.
+          Used as the "Scarlet macaw" example in ASCII Studio.
 
-example-fire.mp4
-  Title:  ABO 2015 - Video of a fire in the fireplace
-  Author: BrillLyle
-  Source: https://commons.wikimedia.org/wiki/File:ABOedit2015-Video-Fire.webm
-  License: CC0 1.0 (public domain dedication)
-           https://creativecommons.org/publicdomain/zero/1.0/
-  Notes:  First 4 s, 480×480, 24 fps, no audio, H.264.
-          Used as the "Fireplace" example in ASCII Studio.
+example-chameleon.mp4
+  Title:  Chameleon (Pixabay: "Chameleon, Reptile, Animal") — Editor's Choice
+  Author: xBriantcx
+  Source: https://pixabay.com/videos/chameleon-reptile-animal-green-233037/
+  License: Pixabay Content License
+           https://pixabay.com/service/license-summary/
+  Notes:  5 s excerpt starting at 15 s of the original 29.6 s 4K clip, scaled
+          to 480×270, 24 fps, no audio, H.264. Locked-off macro of a veiled
+          chameleon's eye and scales. Used as the "Chameleon" example in
+          ASCII Studio.
 
-web/assets/examples/{sea,dance,fire}.bin.gz
-  Pre-rendered ASCII grids of the three example clips (48 columns, 12 fps, 4 s), packed and gzipped.
-  Same authors and licenses as the source clips; they are adaptations of those videos.
+web/assets/examples/{toucan,macaw,chameleon}.bin.gz
+  Pre-rendered ASCII grids of the three example clips (158 columns × 59 rows,
+  12 fps, color, edge gain 1.10×, subject separation off). Packed and gzipped.
+  Same authors and licenses as the source clips; they are adaptations of those
+  videos. The committed grids were packed from 960 px intermediates of the same
+  trims; the in-repo samples are 480 px so the single-file page stays under 3 MB.
+  Rebuild from the in-repo clips with `node tools/pack-examples.mjs`.

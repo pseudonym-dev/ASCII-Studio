@@ -1,5 +1,6 @@
 import { CW, CH } from "./core.js";
 import { unpackClip, gunzip } from "./clip.js";
+import { DEFAULT_LOOK } from "./defaults.js";
 import { $ } from "./dom.js";
 import { LIMITS } from "./plan.js";
 import { paintGrid } from "./render.js";
@@ -11,7 +12,7 @@ import { paintGrid } from "./render.js";
  * @property {string} href
  * @property {string} filename
  * @property {string} clip  gzipped ASX1, base64
- * @property {string | null} source  data URL of the original 4 s video, if inlined
+ * @property {string | null} source  data URL of the original video, if inlined
  * @property {number} sourceBytes
  */
 
@@ -22,8 +23,12 @@ const motionOk = () => !window.matchMedia("(prefers-reduced-motion: reduce)").ma
 /** @type {WeakMap<HTMLCanvasElement, import("./clip.js").PackedFrame & {cols: number, rows: number}>} */
 const painted = new WeakMap();
 
+/** @type {WeakMap<HTMLCanvasElement, HTMLCanvasElement>} */
+const buffers = new WeakMap();
+
 /**
  * Draw `grid` covering a 16:9 canvas, cropping overflow (object-fit: cover).
+ * Glow is painted on an offscreen canvas so it is not clipped or offset by the cover crop.
  * @param {HTMLCanvasElement} canvas
  * @param {import("./clip.js").PackedFrame & {cols: number, rows: number}} grid
  */
@@ -33,16 +38,19 @@ function paintCover(canvas, grid) {
   const pxW = Math.max(1, Math.round(cssW * dpr)), pxH = Math.max(1, Math.round(cssH * dpr));
   if (canvas.width !== pxW || canvas.height !== pxH) { canvas.width = pxW; canvas.height = pxH; }
   const scale = Math.max(cssW / (grid.cols * CW), cssH / (grid.rows * CH));
-  const cw = CW * scale, ch = CH * scale;
+  const gridW = Math.max(1, Math.round(grid.cols * CW * scale * dpr));
+  const gridH = Math.max(1, Math.round(grid.rows * CH * scale * dpr));
+  let buf = buffers.get(canvas);
+  if (!buf) { buf = document.createElement("canvas"); buffers.set(canvas, buf); }
+  if (buf.width !== gridW || buf.height !== gridH) { buf.width = gridW; buf.height = gridH; }
+  paintGrid(/** @type {CanvasRenderingContext2D} */ (buf.getContext("2d")), { ...grid, hasSubject: true }, gridW / grid.cols, gridH / grid.rows, { mono: DEFAULT_LOOK.mono, glow: DEFAULT_LOOK.glow });
   const ctx = /** @type {CanvasRenderingContext2D} */ (canvas.getContext("2d"));
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  ctx.save();
-  ctx.beginPath();
-  ctx.rect(0, 0, cssW, cssH);
-  ctx.clip();
-  ctx.translate((cssW - grid.cols * cw) / 2, (cssH - grid.rows * ch) / 2);
-  paintGrid(ctx, { ...grid, hasSubject: true }, cw, ch, { mono: false, glow: false });
-  ctx.restore();
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.fillStyle = "#000";
+  ctx.fillRect(0, 0, pxW, pxH);
+  const s = Math.max(pxW / gridW, pxH / gridH);
+  const dw = gridW * s, dh = gridH * s;
+  ctx.drawImage(buf, (pxW - dw) / 2, (pxH - dh) / 2, dw, dh);
   painted.set(canvas, grid);
 }
 
@@ -161,6 +169,6 @@ export function exampleZoomDataURL(scale = 4) {
   const out = document.createElement("canvas");
   out.width = cols * cw;
   out.height = rows * ch;
-  paintGrid(/** @type {CanvasRenderingContext2D} */ (out.getContext("2d")), { cols, rows, glyphs, ink, hasSubject: true }, cw, ch, { mono: false, glow: false });
+  paintGrid(/** @type {CanvasRenderingContext2D} */ (out.getContext("2d")), { cols, rows, glyphs, ink, hasSubject: true }, cw, ch, { mono: DEFAULT_LOOK.mono, glow: DEFAULT_LOOK.glow });
   return out.toDataURL("image/png");
 }

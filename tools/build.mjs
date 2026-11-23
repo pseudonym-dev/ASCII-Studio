@@ -18,34 +18,34 @@ const dataUrl = async (/** @type {URL} */ file, /** @type {string} */ mime) =>
 
 const exampleMeta = [
   {
-    id: "sea",
-    title: "Clownfish",
-    credit: "Amada44, CC BY-SA 3.0",
-    href: "https://commons.wikimedia.org/wiki/File:Weissr%C3%BCcken-Anemonenfisch_-_Amphiprion_akallopisos.webm",
-    filename: "example-sea.mp4",
+    id: "toucan",
+    title: "Toco toucan",
+    credit: "Eaktas06, Pixabay License",
+    href: "https://pixabay.com/videos/tucano-p%C3%A1ssaro-%C3%A1rvore-verde-171255/",
+    filename: "example-toucan.mp4",
   },
   {
-    id: "dance",
-    title: "Scissor dance, Peru",
-    credit: "Chris Gill, CC BY 3.0",
-    href: "https://commons.wikimedia.org/wiki/File:Scissor_Dance,_Peru.webm",
-    filename: "example-dance.mp4",
+    id: "macaw",
+    title: "Scarlet macaw",
+    credit: "ahrordzon, Pixabay License",
+    href: "https://pixabay.com/videos/red-parrot-talking-parrot-114146/",
+    filename: "example-macaw.mp4",
   },
   {
-    id: "fire",
-    title: "Fireplace",
-    credit: "BrillLyle, CC0",
-    href: "https://commons.wikimedia.org/wiki/File:ABOedit2015-Video-Fire.webm",
-    filename: "example-fire.mp4",
+    id: "chameleon",
+    title: "Chameleon",
+    credit: "xBriantcx, Pixabay License",
+    href: "https://pixabay.com/videos/chameleon-reptile-animal-green-233037/",
+    filename: "example-chameleon.mp4",
   },
 ];
 
-const exampleBudget = 2 * 1048576;
+const pageBudget = 3 * 1048576;
 const exampleSources = exampleMeta.map((e) => {
   const sourceFile = new URL(e.filename, samples);
   return { file: sourceFile, bytes: statSync(sourceFile).size };
 });
-const includeSources = true; // set false below if the page would exceed 2 MB
+const includeSources = true; // set false below if the page would exceed 3 MB
 const buildExamples = async (/** @type {boolean} */ withSources) => Promise.all(exampleMeta.map(async (e, i) => ({
   title: e.title,
   credit: e.credit,
@@ -76,15 +76,15 @@ const assemble = async (/** @type {typeof examples} */ clips) => {
     .replace("/*__APP__*/", () => app.replaceAll("</script", "<\\/script"));
 };
 let html = await assemble(examples);
-if (html.length > exampleBudget && examples.some((e) => e.source)) {
+if (html.length > pageBudget && examples.some((e) => e.source)) {
   examples = await buildExamples(false);
   html = await assemble(examples);
-  console.log("example source videos omitted so the page stays under 2 MB");
+  console.log("example source videos omitted so the page stays under 3 MB");
 }
 const out = new URL("ascii-studio.html", root);
 await writeFile(out, html);
 const mb = html.length / 1048576;
 console.log(`ascii-studio.html ${(html.length / 1024).toFixed(0)} KB (${mb.toFixed(2)} MB)`);
-if (html.length > 3 * 1048576) {
+if (html.length > pageBudget) {
   throw new Error(`ascii-studio.html is ${mb.toFixed(2)} MB; keep the single file under 3 MB.`);
 }

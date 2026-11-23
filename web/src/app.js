@@ -215,6 +215,7 @@ async function loadFile(file) {
   const prevKind = mediaKind, prevSep = isPressed($("sep"));
   const seq = ++loadSeq;
   try {
+    if (fromHome) applyLookDefaults();
     if (fromHome) $("homeStatus").textContent = isVideo ? "Measuring this machine…" : "Opening…";
     if (isVideo) {
       setStatus("Measuring this machine…");

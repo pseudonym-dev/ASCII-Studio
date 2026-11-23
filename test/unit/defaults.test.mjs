@@ -47,3 +47,12 @@ test("template.html ships the same starting look, already disabled on the empty 
   }
   assert.doesNotMatch(tagFor("closeSidebar"), /\bdisabled\b/);
 });
+
+test("the empty sidebar hint says a file can be dropped anywhere on the page", () => {
+  const hint = html.match(/<p class="hint">Drop an image or a video[^<]+<\/p>/);
+  assert.ok(hint, "sidebar drop hint is missing");
+  assert.match(hint[0], /anywhere on this page/);
+  assert.match(hint[0], /15 s/);
+  assert.match(hint[0], /100 MB/);
+  assert.doesNotMatch(hint[0], /dark area/);
+});
