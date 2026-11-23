@@ -74,16 +74,15 @@
       flex: 0 0 auto; height: calc(100vh - var(--topbar));
       display: grid; grid-template-columns: var(--sidebar) minmax(0, 1fr); min-height: 0;
     }
-    body.home .workspace,
     body.home #fileBtn,
     body.home #demoBtn,
-    body.home #newBtn,
-    body.home .menu-btn { display: none; }
+    body.home #newBtn { display: none; }
     body:not(.home) #home { display: none; }
-    body:not(.home) .workspace,
-    body.home #home { animation: fade-in var(--vm-fast) var(--ease-quiet); }
+    body.home #stage { display: none; }
+    body.home #home,
+    body:not(.home) #stage { animation: fade-in var(--vm-fast) var(--ease-quiet); }
     @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
-    #home { flex: 1 1 auto; width: 100%; max-width: 1080px; margin: 0 auto; padding: 28px 32px 48px; }
+    #home { flex: 1 1 auto; width: 100%; max-width: 1080px; margin: 0 auto; padding: 28px 32px 48px; min-height: 0; overflow: auto; }
     .dropzone {
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       gap: 10px; min-height: 220px; padding: 32px 24px; text-align: center;
@@ -125,6 +124,10 @@
     .btn.primary { background: var(--ink); color: var(--canvas); }
     .btn.primary:hover { opacity: 0.9; background: var(--ink); color: var(--canvas); }
     .btn:disabled { opacity: 0.4; }
+    #sidebarControls[aria-disabled="true"] { opacity: 0.48; pointer-events: none; }
+    #sidebarControls[aria-disabled="true"] .btn:disabled,
+    #sidebarControls[aria-disabled="true"] input:disabled,
+    #sidebarControls[aria-disabled="true"] select:disabled { opacity: 1; }
     .btn:focus-visible, select:focus-visible, input:focus-visible, .timeline-handle:focus-visible { outline: 2px solid var(--accent); }
     .btn.icon { width: 28px; padding: 0; justify-content: center; color: var(--ink-3); }
     .btn.icon:hover { color: var(--ink); }
@@ -237,39 +240,27 @@
     </div>
   </header>
   <button class="scrim" id="scrim" type="button" tabindex="-1" aria-label="Close controls"></button>
-  <div id="home">
-    <div class="dropzone" id="dropzone">
-      <p class="drop-title">Drop a video or image here</p>
-      <label class="btn primary" for="file" id="homeFileBtn" tabindex="0"><svg class="ic"><use href="#i-upload"/></svg>Choose file</label>
-      <p class="hint">Up to 15 s and 100 MB. Everything runs in this browser; nothing is uploaded.</p>
-      <p class="hint" id="homeStatus"></p>
-    </div>
-    <section class="examples" id="examples">
-      <h2 class="group-title" id="examplesTitle">Examples</h2>
-      <p class="hint">A few short ASCII clips. Click one to open it in the editor.</p>
-      <div class="example-grid" id="exampleGrid"></div>
-    </section>
-  </div>
   <div class="workspace" id="workspace">
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-head"><button id="closeSidebar" class="btn icon" type="button" aria-label="Close controls"><svg class="ic"><use href="#i-x"/></svg></button></div>
+      <div id="sidebarControls" inert aria-disabled="true">
       <p class="hint">Drop an image or a video (up to 15 s, 100 MB) on the dark area. Everything runs in this browser; nothing is uploaded.</p>
 
       <div class="group-title" role="heading" aria-level="2">Adjust</div>
       <div class="fields">
-        <div class="field"><label for="density">Density</label><div class="grow"><input id="density" type="range" min="30" max="220" step="1" value="90"><span class="value" id="densityVal">90 columns</span></div></div>
-        <div class="field"><label for="zoom">Zoom</label><div class="grow"><input id="zoom" type="range" min="40" max="300" step="5" value="100"><span class="value" id="zoomVal">100%</span></div></div>
-        <div class="field"><label for="edges">Edges</label><div class="grow"><input id="edges" type="range" min="40" max="200" step="5" value="100"><span class="value" id="edgesVal">1.00×</span></div></div>
+        <div class="field"><label for="density">Density</label><div class="grow"><input id="density" type="range" min="30" max="220" step="1" value="158" disabled><span class="value" id="densityVal">158 columns</span></div></div>
+        <div class="field"><label for="zoom">Zoom</label><div class="grow"><input id="zoom" type="range" min="40" max="300" step="5" value="85" disabled><span class="value" id="zoomVal">85%</span></div></div>
+        <div class="field"><label for="edges">Edges</label><div class="grow"><input id="edges" type="range" min="40" max="200" step="5" value="110" disabled><span class="value" id="edgesVal">1.10×</span></div></div>
       </div>
       <div class="row">
-        <button id="mono" class="btn" type="button" aria-pressed="false">Monochrome</button>
-        <button id="glow" class="btn" type="button" aria-pressed="false">Glow</button>
-        <button id="sep" class="btn" type="button" aria-pressed="true">Separate background</button>
+        <button id="mono" class="btn" type="button" aria-pressed="false" disabled>Monochrome</button>
+        <button id="glow" class="btn" type="button" aria-pressed="true" disabled>Glow</button>
+        <button id="sep" class="btn" type="button" aria-pressed="true" disabled>Separate background</button>
       </div>
       <div class="row">
-        <button id="dlPng" class="btn" type="button"><svg class="ic"><use href="#i-download"/></svg>Download PNG</button>
-        <button id="copy" class="btn" type="button"><svg class="ic"><use href="#i-copy"/></svg><span id="copyLabel">Copy text</span></button>
-        <button id="dlTxt" class="btn" type="button"><svg class="ic"><use href="#i-file-text"/></svg>Download .txt</button>
+        <button id="dlPng" class="btn" type="button" disabled><svg class="ic"><use href="#i-download"/></svg>Download PNG</button>
+        <button id="copy" class="btn" type="button" disabled><svg class="ic"><use href="#i-copy"/></svg><span id="copyLabel">Copy text</span></button>
+        <button id="dlTxt" class="btn" type="button" disabled><svg class="ic"><use href="#i-file-text"/></svg>Download .txt</button>
       </div>
       <p class="hint" id="foot"></p>
 
@@ -277,18 +268,32 @@
         <div class="group-title" role="heading" aria-level="2">Export</div>
         <div class="fields">
           <div class="field"><label for="fmt">Format</label>
-            <select id="fmt"><option value="mp4">MP4</option><option value="webm">WebM</option><option value="gif">GIF</option></select></div>
+            <select id="fmt" disabled><option value="mp4">MP4</option><option value="webm">WebM</option><option value="gif">GIF</option></select></div>
           <div class="field" id="resCtl"><label for="res">Size</label>
-            <select id="res"><option value="540">540p</option><option value="720">720p</option><option value="1080" selected>1080p</option></select></div>
+            <select id="res" disabled><option value="540">540p</option><option value="720">720p</option><option value="1080" selected>1080p</option></select></div>
           <div class="field" id="gifCtl" hidden><label for="gifw">Width</label>
-            <select id="gifw"><option value="320">320 px</option><option value="480" selected>480 px</option><option value="640">640 px</option><option value="960">960 px</option></select></div>
-          <div class="field"><label for="fps">Frame rate</label><select id="fps"></select></div>
+            <select id="gifw" disabled><option value="320">320 px</option><option value="480" selected>480 px</option><option value="640">640 px</option><option value="960">960 px</option></select></div>
+          <div class="field"><label for="fps">Frame rate</label><select id="fps" disabled></select></div>
         </div>
         <div class="row"><span class="value" id="exportInfo" style="min-width:0"></span></div>
+      </div>
       </div>
     </aside>
 
     <div class="stage-col">
+      <div id="home">
+        <div class="dropzone" id="dropzone">
+          <p class="drop-title">Drop a video or image here</p>
+          <label class="btn primary" for="file" id="homeFileBtn" tabindex="0"><svg class="ic"><use href="#i-upload"/></svg>Choose file</label>
+          <p class="hint">Up to 15 s and 100 MB. Everything runs in this browser; nothing is uploaded.</p>
+          <p class="hint" id="homeStatus"></p>
+        </div>
+        <section class="examples" id="examples">
+          <h2 class="group-title" id="examplesTitle">Examples</h2>
+          <p class="hint">A few short ASCII clips. Click one to open it in the editor.</p>
+          <div class="example-grid" id="exampleGrid"></div>
+        </section>
+      </div>
       <div class="stage-wrap" id="stage">
         <canvas id="out" aria-label="ASCII image"></canvas>
         <div id="busy">rendering…</div>

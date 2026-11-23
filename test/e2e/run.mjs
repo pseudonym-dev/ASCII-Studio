@@ -42,7 +42,10 @@ const renders = () => b.ev("ASCII.stats.renders || 0");
 try {
   await b.goto("file://" + join(root, "web/ascii-studio.html"));
   const scheme = (/** @type {string} */ value) => b.send("Emulation.setEmulatedMedia", { features: [{ name: "prefers-color-scheme", value }] });
-  check("starts on the home screen, with the editor hidden", await b.ev("ASCII.mode === 'home' && document.body.classList.contains('home') && getComputedStyle(document.getElementById('workspace')).display === 'none' && getComputedStyle(document.getElementById('home')).display !== 'none'"));
+  const defaultLook = "document.getElementById('density').value === '158' && document.getElementById('densityVal').textContent === '158 columns' && document.getElementById('zoom').value === '85' && document.getElementById('zoomVal').textContent === '85%' && document.getElementById('edges').value === '110' && document.getElementById('edgesVal').textContent === '1.10×' && document.getElementById('glow').getAttribute('aria-pressed') === 'true' && document.getElementById('mono').getAttribute('aria-pressed') === 'false' && document.getElementById('sep').getAttribute('aria-pressed') === 'true'";
+  const sidebarIdle = "document.getElementById('sidebarControls').inert && document.getElementById('sidebarControls').getAttribute('aria-disabled') === 'true' && document.getElementById('density').disabled && document.getElementById('glow').disabled && document.getElementById('dlPng').disabled && getComputedStyle(document.getElementById('workspace')).display !== 'none' && getComputedStyle(document.getElementById('sidebar')).display !== 'none' && getComputedStyle(document.getElementById('home')).display !== 'none' && getComputedStyle(document.getElementById('stage')).display === 'none' && document.getElementById('videoBar').hidden";
+  check("starts on the home screen, with the stage hidden and the sidebar visible", await b.ev("ASCII.mode === 'home' && document.body.classList.contains('home') && " + sidebarIdle));
+  check("the empty sidebar shows the starting look, disabled", await b.ev(defaultLook));
   check("no media is loaded until the user chooses a file", await b.ev("(ASCII.stats.renders || 0) === 0"));
   check("the drop zone explains what to do", await b.ev("document.getElementById('dropzone').textContent.includes('Drop a video or image here') && document.getElementById('dropzone').textContent.includes('15 s') && document.getElementById('dropzone').textContent.includes('100 MB')"));
   check("choose file lives in the drop zone on home", await b.ev("document.getElementById('dropzone').contains(document.getElementById('homeFileBtn')) && getComputedStyle(document.getElementById('fileBtn')).display === 'none'"));
@@ -71,15 +74,20 @@ try {
 
   await b.ev("document.querySelector('#exampleGrid figure').click()");
   check("clicking an example opens the editor", await waitFor("ASCII.mode === 'editor' && !document.getElementById('videoBar').hidden && ASCII.stats.playing && document.getElementById('foot').textContent.includes('example-sea.mp4')", 30000), await b.ev("ASCII.mode + ' ' + document.getElementById('foot').textContent"));
-  check("examples are hidden in the editor", await b.ev("getComputedStyle(document.getElementById('home')).display === 'none'"));
+  check("examples are hidden in the editor", await b.ev("getComputedStyle(document.getElementById('home')).display === 'none' && getComputedStyle(document.getElementById('stage')).display !== 'none'"));
+  check("loading an example enables the sidebar controls", await b.ev("!document.getElementById('sidebarControls').inert && document.getElementById('sidebarControls').getAttribute('aria-disabled') === 'false' && !document.getElementById('density').disabled && !document.getElementById('glow').disabled"));
   check("choose file and export live in the top bar", await b.ev("document.getElementById('topbar').contains(document.getElementById('fileBtn')) && document.getElementById('topbar').contains(document.getElementById('demoBtn')) && document.getElementById('topbar').contains(document.getElementById('newBtn')) && document.getElementById('topbar').contains(document.getElementById('exportBtn')) && getComputedStyle(document.getElementById('fileBtn')).display !== 'none'"));
   check("adjust settings live in the sidebar, not the transport", await b.ev("document.getElementById('sidebar').contains(document.getElementById('density')) && document.getElementById('sidebar').contains(document.getElementById('fmt')) && !document.getElementById('sidebar').contains(document.getElementById('playBtn'))"));
   check("menu button is hidden on a wide window", await b.ev("getComputedStyle(document.getElementById('menuBtn')).display === 'none'"));
   await sleep(400);
   await b.screenshot(join(shots, "editor-from-example.png"));
 
+  await setValue("density", 60);
+  await click("glow");
+  check("the look can be changed in the editor", await b.ev("document.getElementById('density').value === '60' && document.getElementById('glow').getAttribute('aria-pressed') === 'false'"));
   await click("newBtn");
   check("New returns to the home screen and clears the session", await waitFor("ASCII.mode === 'home' && document.getElementById('videoBar').hidden && (ASCII.stats.renders || 0) === 0 && document.getElementById('sourceVideo').paused", 5000), await b.ev("ASCII.mode + ' renders=' + (ASCII.stats.renders || 0)"));
+  check("New restores the starting look and disables the sidebar", await b.ev(defaultLook + " && " + sidebarIdle), await b.ev("['density','zoom','edges'].map((id)=>document.getElementById(id).value).join(',') + ' glow=' + document.getElementById('glow').getAttribute('aria-pressed') + ' inert=' + document.getElementById('sidebarControls').inert"));
 
   await b.ev("document.querySelector('#exampleGrid figure').click()");
   await click("homeBtn");
@@ -97,7 +105,12 @@ try {
   check("choosing an image opens the editor", await waitFor("ASCII.mode === 'editor' && ASCII.stats.renders > 0", 30000));
   await waitFor(`ASCII.stats.renders > ${n}`);
   check("background separation defaults ON for images", await b.ev("ASCII.sepOn"));
+  check("an image opens at the starting look", await b.ev(defaultLook + " && ASCII.stats.cols === 158 && document.getElementById('glow').getAttribute('aria-pressed') === 'true'"));
+  check("choosing a file enables the sidebar controls", await b.ev("!document.getElementById('sidebarControls').inert && !document.getElementById('density').disabled"));
   check("video controls hidden for images", await b.ev("document.getElementById('videoBar').hidden && document.getElementById('exportBar').hidden && document.getElementById('topExport').hidden"));
+  await scheme("light");
+  await sleep(200);
+  await b.screenshot(join(shots, "editor-defaults.png"));
   await setValue("density", 160);
   await waitFor(`ASCII.stats.cols === 160`);
   const imgStats = await b.ev("ASCII.stats");
@@ -111,6 +124,7 @@ try {
 
   await click("homeBtn");
   check("the title returns to the home screen", await waitFor("ASCII.mode === 'home' && (ASCII.stats.renders || 0) === 0", 5000));
+  check("returning home restores the starting look and disables the sidebar", await b.ev(defaultLook + " && " + sidebarIdle));
   await b.setFiles("#file", [sample("clownfish-real.jpg")]);
   await waitFor("ASCII.mode === 'editor' && ASCII.stats.renders > 0", 30000);
 

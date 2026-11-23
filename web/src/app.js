@@ -4,6 +4,7 @@ import { Pool, latestWins } from "./pool.js";
 import { fileSizeProblem } from "./plan.js";
 import { frameRequest, paintGrid } from "./render.js";
 import { createVideoSession } from "./video.js";
+import { DEFAULT_LOOK, densityLabel, edgesLabel, zoomLabel } from "./defaults.js";
 import { exampleZoomDataURL, mountExamples } from "./examples.js";
 
 /** @typedef {import("./pool.js").TimedGrid} TimedGrid */
@@ -149,7 +150,30 @@ const showError = (msg) => {
 function enterEditor() {
   $("homeStatus").textContent = "";
   document.body.classList.remove("home");
+  setControlsEnabled(true);
   requestAnimationFrame(() => { if (grid) draw(); else runner.request(undefined); });
+}
+
+/** Reset sliders and toggles to the starting look. */
+function applyLookDefaults() {
+  const d = DEFAULT_LOOK;
+  setPressed($("sep"), d.sep);
+  setPressed($("mono"), d.mono);
+  setPressed($("glow"), d.glow);
+  $("density").value = String(d.density);
+  $("densityVal").textContent = densityLabel(d.density);
+  $("zoom").value = String(d.zoom);
+  $("zoomVal").textContent = zoomLabel(d.zoom);
+  $("edges").value = String(d.edges);
+  $("edgesVal").textContent = edgesLabel(d.edges);
+}
+
+/** Enable or disable the sidebar controls. The close button stays usable on a narrow screen. @param {boolean} on */
+function setControlsEnabled(on) {
+  const box = $("sidebarControls");
+  box.toggleAttribute("inert", !on);
+  box.setAttribute("aria-disabled", String(!on));
+  for (const el of box.querySelectorAll("button, input, select")) el.disabled = !on;
 }
 
 /** Clear the session and return to the empty home screen. */
@@ -170,12 +194,8 @@ function resetSession() {
   canvas.removeAttribute("style");
   $("file").value = "";
   mediaKind = "image";
-  setPressed($("sep"), true);
-  setPressed($("mono"), false);
-  setPressed($("glow"), false);
-  $("density").value = "90"; $("densityVal").textContent = "90 columns";
-  $("zoom").value = "100"; $("zoomVal").textContent = "100%";
-  $("edges").value = "100"; $("edgesVal").textContent = "1.00×";
+  applyLookDefaults();
+  setControlsEnabled(false);
   setSidebar(false);
   document.body.classList.add("home");
   window.scrollTo(0, 0);
@@ -229,9 +249,9 @@ async function loadDemo() {
 
 const redrawSoon = (() => { let raf = 0; return () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(draw); }; })();
 
-$("density").addEventListener("input", () => { $("densityVal").textContent = `${$("density").value} columns`; session.refresh(); runner.request(undefined); });
-$("edges").addEventListener("input", () => { $("edgesVal").textContent = `${($("edges").value / 100).toFixed(2)}×`; runner.request(undefined); });
-$("zoom").addEventListener("input", () => { $("zoomVal").textContent = `${$("zoom").value}%`; redrawSoon(); });
+$("density").addEventListener("input", () => { $("densityVal").textContent = densityLabel(+$("density").value); session.refresh(); runner.request(undefined); });
+$("edges").addEventListener("input", () => { $("edgesVal").textContent = edgesLabel(+$("edges").value); runner.request(undefined); });
+$("zoom").addEventListener("input", () => { $("zoomVal").textContent = zoomLabel(+$("zoom").value); redrawSoon(); });
 window.addEventListener("resize", redrawSoon);
 for (const id of ["mono", "glow"]) $(id).addEventListener("click", () => { setPressed($(id), !isPressed($(id))); redrawSoon(); });
 $("sep").addEventListener("click", () => { setPressed($("sep"), !isPressed($("sep"))); runner.request(undefined); });
@@ -304,3 +324,4 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape") setSidebar
 narrowUi.addEventListener("change", () => { if (!narrowUi.matches) setSidebar(false); });
 
 mountExamples(loadFile, () => loadSeq);
+setControlsEnabled(false);
