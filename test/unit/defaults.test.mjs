@@ -19,6 +19,7 @@ test("the starting look is 158 columns, 85% zoom, 1.10× edges, and Glow", () =>
     edges: 110,
     mono: false,
     glow: true,
+  paper: false,
     sep: true,
   });
   assert.equal(densityLabel(DEFAULT_LOOK.density), "158 columns");

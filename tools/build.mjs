@@ -25,18 +25,21 @@ const exampleMeta = [
     filename: "example-toucan.mp4",
   },
   {
-    id: "dancer",
-    title: "Dancer",
-    credit: "agus252, Pixabay License",
-    href: "https://pixabay.com/videos/woman-girl-dancer-2d-cartoon-140638/",
-    filename: "example-dancer.mp4",
+    id: "mountains",
+    title: "Mountain hero background",
+    credit: "ASCII Studio, CC0",
+    href: "https://github.com/pseudonym-dev/ASCII-Studio",
+    filename: "example-mountains.mp4",
+    paper: true,
+    separate: true,
   },
   {
-    id: "horse",
-    title: "Galloping horse",
-    credit: "Yocchi09, Pixabay License",
-    href: "https://pixabay.com/videos/horse-run-meadow-animal-natural-330880/",
-    filename: "example-horse.mp4",
+    id: "sculpture",
+    title: "3D hero object",
+    credit: "ASCII Studio, CC0",
+    href: "https://github.com/pseudonym-dev/ASCII-Studio",
+    filename: "example-sculpture.mp4",
+    separate: true,
   },
   {
     id: "fire",
@@ -75,6 +78,8 @@ const buildExamples = async (/** @type {boolean} */ withSources) => Promise.all(
   clip: (await readFile(new URL(`assets/examples/${e.id}.bin.gz`, root))).toString("base64"),
   source: withSources ? await dataUrl(exampleSources[i].file, "video/mp4") : null,
   sourceBytes: withSources ? exampleSources[i].bytes : 0,
+  paper: Boolean(e.paper),
+  separate: Boolean(e.separate),
 })));
 let examples = await buildExamples(includeSources);
 

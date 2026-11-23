@@ -26,8 +26,8 @@ const FONT_PATHS = [
 
 const examples = [
   { id: "toucan", file: "example-toucan.mp4" },
-  { id: "dancer", file: "example-dancer.mp4" },
-  { id: "horse", file: "example-horse.mp4" },
+  { id: "mountains", file: "example-mountains.mp4", separate: true, cols: 100 }, // empty sky and chunkier cells, like a hero background
+  { id: "sculpture", file: "example-sculpture.mp4", separate: true, cols: 110 }, // 3D hero object on an empty dark backdrop
   { id: "fire", file: "example-fire.mp4" },
   { id: "koi", file: "example-koi.mp4" },
   { id: "jellyfish", file: "example-jellyfish.mp4" },
@@ -96,18 +96,18 @@ async function main() {
   });
   if (!font) throw new Error(`could not load ${FONT_NAME}; install fonts-dejavu-core`);
 
-  const layout = frameLayout(480, 270, COLS);
-  const tw = layout.cols * layout.SW, th = layout.rows * layout.SH;
-  const atlas = buildAtlas(canvas, layout.SW, layout.SH);
   const outDir = resolve(root, "web/assets/examples");
   mkdirSync(outDir, { recursive: true });
 
   for (const example of examples) {
     const src = resolve(root, "samples", example.file);
+    const layout = frameLayout(480, 270, example.cols ?? COLS);
+    const tw = layout.cols * layout.SW, th = layout.rows * layout.SH;
+    const atlas = buildAtlas(canvas, layout.SW, layout.SH);
     console.log(`packing ${example.id} from ${example.file} (${layout.cols}×${layout.rows} @ ${FPS} fps)`);
     const frames = extractRgbaFrames(src, tw, th, FPS);
     if (frames.length < 2) throw new Error(`${example.file}: expected a looping clip, got ${frames.length} frame(s)`);
-    const grids = frames.map((rgba) => computeGrid({ rgba, layout, atlas, edgeGain: EDGE_GAIN, separate: false }));
+    const grids = frames.map((rgba) => computeGrid({ rgba, layout, atlas, edgeGain: EDGE_GAIN, separate: example.separate ?? false }));
     const packed = packClip({
       cols: layout.cols,
       rows: layout.rows,

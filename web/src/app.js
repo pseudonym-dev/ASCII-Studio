@@ -21,7 +21,7 @@ let renders = 0;
 let stats = {};
 
 /** @returns {Look} */
-const look = () => ({ edgeGain: +$("edges").value / 100, separate: isPressed($("sep")), mono: isPressed($("mono")), glow: isPressed($("glow")) });
+const look = () => ({ edgeGain: +$("edges").value / 100, separate: isPressed($("sep")), paper: isPressed($("paper")), mono: isPressed($("mono")), glow: isPressed($("glow")) });
 let stickyStatus = false; // user-facing errors must not be overwritten by the next render
 /** @param {string} t @param {boolean} [sticky] */
 const setStatus = (t, sticky = false) => {
@@ -135,6 +135,7 @@ async function loadImageBlob(blob, name, seq = ++loadSeq) {
   session.detach();
   if (imageSource instanceof ImageBitmap) imageSource.close();
   imageSource = decoded;
+  grid = null; // otherwise enterEditor() repaints the previous file's frame instead of rendering this one
   $("foot").textContent = `Image: ${name} · Processed locally; nothing is uploaded. The downloaded .txt is plain ASCII (no colour).`;
   return true;
 }
@@ -160,6 +161,7 @@ function applyLookDefaults() {
   setPressed($("sep"), d.sep);
   setPressed($("mono"), d.mono);
   setPressed($("glow"), d.glow);
+  setPressed($("paper"), d.paper);
   $("density").value = String(d.density);
   $("densityVal").textContent = densityLabel(d.density);
   $("zoom").value = String(d.zoom);
@@ -274,7 +276,7 @@ $("density").addEventListener("input", () => { $("densityVal").textContent = den
 $("edges").addEventListener("input", () => { $("edgesVal").textContent = edgesLabel(+$("edges").value); runner.request(undefined); });
 $("zoom").addEventListener("input", () => { $("zoomVal").textContent = zoomLabel(+$("zoom").value); redrawSoon(); });
 window.addEventListener("resize", redrawSoon);
-for (const id of ["mono", "glow"]) $(id).addEventListener("click", () => { setPressed($(id), !isPressed($(id))); redrawSoon(); });
+for (const id of ["mono", "glow", "paper"]) $(id).addEventListener("click", () => { setPressed($(id), !isPressed($(id))); redrawSoon(); });
 $("sep").addEventListener("click", () => { setPressed($("sep"), !isPressed($("sep"))); runner.request(undefined); });
 $("file").addEventListener("change", () => { const f = $("file").files[0]; $("file").value = ""; loadFile(f); });
 for (const id of ["fileBtn", "homeFileBtn"]) $(id).addEventListener("keydown", (/** @type {KeyboardEvent} */ e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); $("file").click(); } });

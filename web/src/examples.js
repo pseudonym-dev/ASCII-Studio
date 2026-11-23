@@ -14,6 +14,8 @@ import { paintGrid } from "./render.js";
  * @property {string} clip  gzipped ASX1, base64
  * @property {string | null} source  data URL of the original video, if inlined
  * @property {number} sourceBytes
+ * @property {boolean} [paper]  painted as soft ink on white (light hero background)
+ * @property {boolean} [separate]  made with background separation, so the backdrop stays empty
  */
 
 /** @param {string} s */
@@ -31,8 +33,9 @@ const buffers = new WeakMap();
  * Glow is painted on an offscreen canvas so it is not clipped or offset by the cover crop.
  * @param {HTMLCanvasElement} canvas
  * @param {import("./clip.js").PackedFrame & {cols: number, rows: number}} grid
+ * @param {boolean} paper
  */
-function paintCover(canvas, grid) {
+function paintCover(canvas, grid, paper) {
   const cssW = Math.max(1, canvas.clientWidth), cssH = Math.max(1, canvas.clientHeight);
   const dpr = Math.min(window.devicePixelRatio || 1, 3);
   const pxW = Math.max(1, Math.round(cssW * dpr)), pxH = Math.max(1, Math.round(cssH * dpr));
@@ -43,10 +46,10 @@ function paintCover(canvas, grid) {
   let buf = buffers.get(canvas);
   if (!buf) { buf = document.createElement("canvas"); buffers.set(canvas, buf); }
   if (buf.width !== gridW || buf.height !== gridH) { buf.width = gridW; buf.height = gridH; }
-  paintGrid(/** @type {CanvasRenderingContext2D} */ (buf.getContext("2d")), { ...grid, hasSubject: true }, gridW / grid.cols, gridH / grid.rows, { mono: DEFAULT_LOOK.mono, glow: DEFAULT_LOOK.glow });
+  paintGrid(/** @type {CanvasRenderingContext2D} */ (buf.getContext("2d")), { ...grid, hasSubject: true }, gridW / grid.cols, gridH / grid.rows, { mono: DEFAULT_LOOK.mono, glow: DEFAULT_LOOK.glow, paper });
   const ctx = /** @type {CanvasRenderingContext2D} */ (canvas.getContext("2d"));
   ctx.setTransform(1, 0, 0, 1, 0, 0);
-  ctx.fillStyle = "#000";
+  ctx.fillStyle = paper ? "#fff" : "#000";
   ctx.fillRect(0, 0, pxW, pxH);
   const s = Math.max(pxW / gridW, pxH / gridH);
   const dw = gridW * s, dh = gridH * s;
@@ -75,7 +78,7 @@ export function mountExamples(openFile, generation = () => 0) {
   for (const clip of clips) {
     const fig = document.createElement("figure");
     const canvas = document.createElement("canvas");
-    canvas.className = "example-stage";
+    canvas.className = clip.paper ? "example-stage paper" : "example-stage";
     canvas.setAttribute("aria-label", clip.title);
     const cap = document.createElement("figcaption");
     const title = document.createElement("strong");
@@ -97,7 +100,7 @@ export function mountExamples(openFile, generation = () => 0) {
       const f = clipData.frames[i];
       return { cols: clipData.cols, rows: clipData.rows, glyphs: f.glyphs, ink: f.ink };
     };
-    const draw = () => { if (data?.frames[frame]) paintCover(canvas, gridAt(frame)); };
+    const draw = () => { if (data?.frames[frame]) paintCover(canvas, gridAt(frame), !!clip.paper); };
     const stop = () => { playing = false; if (raf) cancelAnimationFrame(raf); raf = 0; };
     const tick = (/** @type {number} */ now) => {
       if (!playing || !data) return;
@@ -129,7 +132,7 @@ export function mountExamples(openFile, generation = () => 0) {
     const source = clip.source;
     if (source && clip.sourceBytes <= LIMITS.maxBytes) {
       fig.classList.add("openable");
-      fig.addEventListener("click", () => openFromData(source, clip.filename, openFile, generation));
+      fig.addEventListener("click", () => openFromData(source, clip.filename, openFile, generation, clip));
     }
     const ro = new ResizeObserver(() => draw());
     ro.observe(canvas);
@@ -138,12 +141,19 @@ export function mountExamples(openFile, generation = () => 0) {
   }
 }
 
-/** @param {string} url @param {string} name @param {(file: File) => void | Promise<void>} openFile @param {() => number} generation */
-async function openFromData(url, name, openFile, generation) {
+/**
+ * @param {string} url @param {string} name @param {(file: File) => void | Promise<void>} openFile @param {() => number} generation
+ * @param {{paper?: boolean, separate?: boolean}} made  the look the example was made with, applied in the editor too
+ */
+async function openFromData(url, name, openFile, generation, made) {
   const g = generation();
   const blob = await (await fetch(url)).blob();
   if (g !== generation()) return;
   await openFile(new File([blob], name, { type: blob.type || "video/mp4" }));
+  if (g + 1 !== generation()) return;
+  // clicking goes through the normal toggle handlers, so the preview re-renders
+  const want = /** @type {string[]} */ ([made.paper && "paper", made.separate && "sep"].filter(Boolean));
+  for (const id of want) if ($(id).getAttribute("aria-pressed") !== "true") $(id).click();
 }
 
 /** Sharp zoom of the first example, for screenshots and tests. @param {number} [scale] */

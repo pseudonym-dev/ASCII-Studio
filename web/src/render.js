@@ -4,11 +4,13 @@ import { luma } from "./util.js";
 
 /** @typedef {import("./core.js").Grid} Grid */
 /** @typedef {import("./frames.js").FrameSource} FrameSource */
-/** @typedef {{edgeGain: number, separate: boolean, mono: boolean, glow: boolean}} Look */
+/** @typedef {{edgeGain: number, separate: boolean, mono: boolean, glow: boolean, paper?: boolean}} Look */
 
 export const FONT = '"DejaVu Sans Mono","Menlo","Consolas","Liberation Mono",ui-monospace,monospace';
 const FONT_PX = 20;
 const BASE_Y = 15.56;
+/** Ink for the light "paper" look: one soft slate blue, strength taken from the cell's brightness. */
+const PAPER_INK = "#7d8fbd";
 const CHARS = Array.from({ length: 96 }, (_, i) => glyphChar(i));
 
 /** @type {Map<string, Float32Array>} */
@@ -51,12 +53,13 @@ let glowScratch = null;
 
 /**
  * Draw a grid. Cell size may be fractional. Glow adds two blurred, downscaled copies.
+ * Paper draws soft ink on white instead of colour on black, for light hero backgrounds.
  * @param {CanvasRenderingContext2D} ctx @param {Grid} grid @param {number} cw @param {number} ch
- * @param {Pick<Look, "mono" | "glow">} opts
+ * @param {Pick<Look, "mono" | "glow" | "paper">} opts
  */
 export function paintGrid(ctx, grid, cw, ch, opts) {
   const W = grid.cols * cw, H = grid.rows * ch;
-  ctx.fillStyle = "#000";
+  ctx.fillStyle = opts.paper ? "#fff" : "#000";
   ctx.fillRect(0, 0, W, H);
   ctx.font = `${(ch / CH) * FONT_PX}px ${FONT}`;
   ctx.textBaseline = "alphabetic";
@@ -67,12 +70,19 @@ export function paintGrid(ctx, grid, cw, ch, opts) {
     for (let c = 0; c < grid.cols; c++, i++) {
       if (!glyphs[i]) continue;
       let R = ink[i * 3], G = ink[i * 3 + 1], B = ink[i * 3 + 2];
+      if (opts.paper) {
+        ctx.globalAlpha = Math.min(1, luma(R, G, B) / 170);
+        ctx.fillStyle = PAPER_INK;
+        ctx.fillText(CHARS[glyphs[i]], c * cw, r * ch + by);
+        continue;
+      }
       if (opts.mono) R = G = B = Math.min(255, Math.round(40 + luma(R, G, B) * 1.05));
       ctx.fillStyle = `rgb(${R},${G},${B})`;
       ctx.fillText(CHARS[glyphs[i]], c * cw, r * ch + by);
     }
   }
-  if (opts.glow) paintGlow(ctx, W, H);
+  ctx.globalAlpha = 1;
+  if (opts.glow && !opts.paper) paintGlow(ctx, W, H);
 }
 
 /** @param {CanvasRenderingContext2D} ctx @param {number} W @param {number} H */

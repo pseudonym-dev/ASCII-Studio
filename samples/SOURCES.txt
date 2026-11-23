@@ -28,23 +28,15 @@ example-toucan.mp4
   Notes:  5 s excerpt starting at 13.6 s of the original, scaled to 480×270,
           24 fps, no audio, H.264.
 
-example-dancer.mp4
-  Title:  Woman, Girl, Dancer (2D cartoon)
-  Author: agus252
-  Source: https://pixabay.com/videos/woman-girl-dancer-2d-cartoon-140638/
-  License: Pixabay Content License
-           https://pixabay.com/service/license-summary/
-  Notes:  5 s excerpt starting at 0 s of the original, scaled to 480×270,
-          24 fps, no audio, H.264.
+example-mountains.mp4
+  Generated for ASCII Studio: four layers of rolling mountains, high at the
+  edges and low in the middle so a headline fits, drifting slowly at two
+  speeds in a seamless 12 s loop. 480×270, 24 fps, no audio, H.264. CC0.
 
-example-horse.mp4
-  Title:  Horse, Run, Meadow
-  Author: Yocchi09
-  Source: https://pixabay.com/videos/horse-run-meadow-animal-natural-330880/
-  License: Pixabay Content License
-           https://pixabay.com/service/license-summary/
-  Notes:  5 s excerpt starting at 0 s of the original, scaled to 480×270,
-          24 fps, no audio, H.264.
+example-sculpture.mp4
+  Generated for ASCII Studio: a twisted ring cut into four ribbons, raymarched
+  in 3D with soft lavender shading on black. It spins a quarter turn (its
+  symmetry) while the tilt and twist breathe, in a seamless 5 s loop. 480×270, 24 fps, no audio, H.264. CC0.
 
 example-fire.mp4
   Title:  Fire, Flames, Wood

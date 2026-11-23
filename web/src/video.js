@@ -147,15 +147,14 @@ export function createVideoSession(d) {
 
   async function benchmark() {
     const samples = [];
-    for (const cols of [60, 120]) {
-      await d.bench(cols);
-      samples.push({ cols, ms: await d.bench(cols) });
-    }
+    // ponytail: one sample per mode, no warm-up run and a single seek; phones seek 4K HEVC slowly,
+    // so this keeps opening fast. Cost: a slightly pessimistic first preview cap and export estimate.
+    for (const cols of [60, 120]) samples.push({ cols, ms: await d.bench(cols) });
     model = costModel(samples);
     governor = new PreviewGovernor(model);
-    const mid = (trimWin.start + trimWin.end) / 2, t0 = performance.now();
-    for (let k = 0; k < 3; k++) await seekTo(video, Math.min(mid + k / 24, duration - 0.01));
-    seekMs = (performance.now() - t0) / 3;
+    const t0 = performance.now();
+    await seekTo(video, Math.min((trimWin.start + trimWin.end) / 2, duration - 0.01));
+    seekMs = performance.now() - t0;
   }
 
   /** @param {File} file */

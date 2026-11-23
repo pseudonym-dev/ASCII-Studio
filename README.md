@@ -26,8 +26,8 @@ Full source and license notes for sample media are in `samples/SOURCES.txt`.
 
 - Clownfish photo (`samples/clownfish-real.jpg`, used by tests): Nick Hobgood, clownfish (*Amphiprion ocellaris*) in a magnificent sea anemone, East Timor. [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Anemone_purple_anemonefish.jpg), **CC BY-SA 3.0**.
 - “Toco toucan” example: Eaktas06. [Pixabay](https://pixabay.com/videos/toucan-bird-beak-feathers-plumage-150714/), **Pixabay Content License**.
-- “Dancer” example: agus252. [Pixabay](https://pixabay.com/videos/woman-girl-dancer-2d-cartoon-140638/), **Pixabay Content License**.
-- “Galloping horse” example: Yocchi09. [Pixabay](https://pixabay.com/videos/horse-run-meadow-animal-natural-330880/), **Pixabay Content License**.
+- “Mountain hero background” example: generated for this project (layered rolling hills that drift slowly in a seamless 12 s loop, drawn as soft ink on white), **CC0**.
+- “3D hero object” example: generated for this project (a twisted, segmented ring raymarched in 3D that spins, tilts and twists in a seamless 5 s loop), **CC0**.
 - “Campfire” example: NickyPe. [Pixabay](https://pixabay.com/videos/fire-flames-wood-burn-campfire-192687/), **Pixabay Content License**.
 - “Koi pond” example: Paul_Tran. [Pixabay](https://pixabay.com/videos/koi-fish-fish-japanese-pond-nature-48287/), **Pixabay Content License**.
 - “Jellyfish” example: christianbodhi. [Pixabay](https://pixabay.com/videos/jellyfish-aquarium-exhibition-213616/), **Pixabay Content License**.

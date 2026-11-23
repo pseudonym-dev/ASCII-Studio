@@ -239,6 +239,7 @@
       box-shadow: inset 0 0 0 1px var(--border-secondary); filter: saturate(1.15) brightness(1.12);
       transition: transform 200ms var(--ease);
     }
+    .example-stage.paper { filter: none; }
     .example-grid figcaption { margin-top: 12px; color: var(--text-tertiary); font-size: 14px; line-height: 20px; }
     .example-grid figcaption strong { display: block; color: var(--text-primary); font-size: 16px; line-height: 24px; font-weight: 600; }
     .example-grid figcaption a { color: inherit; text-decoration: none; }
@@ -345,12 +346,12 @@
     #busy::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--brand); animation: pulse 900ms ease-in-out infinite alternate; }
     @keyframes pulse { from { opacity: 0.3; } to { opacity: 1; } }
     #busy.on { opacity: 1; }
-    #sourceVideo { position: fixed; left: -9999px; top: 0; width: 320px; }
+    #sourceVideo { position: fixed; left: 0; top: 0; width: 2px; height: 2px; opacity: 0.01; pointer-events: none; z-index: -1; }
 
     /* ---------- timeline ---------- */
     #videoBar { position: relative; flex: 0 0 auto; padding: 12px 20px 16px; background: var(--bg-primary); border-top: 1px solid var(--border-secondary); }
     .transport { display: flex; align-items: center; gap: 8px; }
-    .transport .value { margin-left: 8px; color: var(--text-secondary); }
+    .transport .value { margin-left: 8px; color: var(--text-secondary); white-space: nowrap; }
     #prevInfo { color: var(--text-tertiary); font-size: 12px; }
     .timeline { position: relative; height: 56px; margin-top: 12px; touch-action: none; user-select: none; cursor: pointer; }
     .timeline::before {
@@ -409,7 +410,10 @@
       .home-title { font-size: 30px; line-height: 38px; }
       .home-sub { font-size: 16px; line-height: 24px; }
       .example-grid { grid-template-columns: minmax(0, 1fr); }
-      .brand-name, .gh-label { display: none; }
+      .brand-name, .gh-label, .gh-count, .btn-text { display: none; }
+      .topbar { gap: 6px; padding: 0 12px; }
+      .topbar .btn:not(.icon) { width: 36px; padding: 0; }
+      #prevInfo { display: none; }
       .section-head { flex-direction: column; align-items: flex-start; }
     }
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition-duration: 0.01ms !important; } }
@@ -424,11 +428,11 @@
     <a class="btn secondary gh" id="ghBtn" href="https://github.com/pseudonym-dev/ASCII-Studio" target="_blank" rel="noopener"><svg class="ic ic-fill"><use href="#i-github"/></svg><span class="gh-label">Star on GitHub</span><span class="gh-count" id="ghStars" hidden></span></a>
     <a class="btn secondary sponsor" href="https://github.com/sponsors/pseudonym-dev" target="_blank" rel="noopener" aria-label="Sponsor on GitHub"><svg class="ic"><use href="#i-heart"/></svg><span class="gh-label">Sponsor</span></a>
     <button id="themeBtn" class="btn icon" type="button" aria-label="Switch theme" data-tip="Light / dark"><svg class="ic theme-dark"><use href="#i-sun"/></svg><svg class="ic theme-light"><use href="#i-moon"/></svg></button>
-    <label class="btn secondary" for="file" id="fileBtn" tabindex="0"><svg class="ic"><use href="#i-upload"/></svg>Choose file</label>
+    <label class="btn secondary" for="file" id="fileBtn" tabindex="0" aria-label="Choose file"><svg class="ic"><use href="#i-upload"/></svg><span class="btn-text">Choose file</span></label>
     <div id="topExport" hidden>
       <progress id="prog" max="1" value="0" hidden></progress>
-      <button id="cancelBtn" class="btn secondary" type="button" hidden><svg class="ic"><use href="#i-x"/></svg>Cancel</button>
-      <button id="exportBtn" class="btn primary" type="button"><svg class="ic"><use href="#i-download"/></svg>Export</button>
+      <button id="cancelBtn" class="btn secondary" type="button" aria-label="Cancel export" hidden><svg class="ic"><use href="#i-x"/></svg><span class="btn-text">Cancel</span></button>
+      <button id="exportBtn" class="btn primary" type="button" aria-label="Export"><svg class="ic"><use href="#i-download"/></svg><span class="btn-text">Export</span></button>
     </div>
     <button id="menuBtn" class="btn icon secondary menu-btn" type="button" aria-label="Open controls" aria-controls="sidebar" aria-expanded="false"><svg class="ic"><use href="#i-menu"/></svg></button>
   </header>
@@ -520,6 +524,10 @@
           <div class="toggle-row">
             <div class="toggle-text"><p class="toggle-label" id="sepLabel">Separate background</p><p class="toggle-hint">Fade the backdrop so the subject stands out.</p></div>
             <button id="sep" class="switch" type="button" aria-pressed="true" aria-labelledby="sepLabel" disabled></button>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-text"><p class="toggle-label" id="paperLabel">Light background</p><p class="toggle-hint">Soft ink on white, for light hero sections.</p></div>
+            <button id="paper" class="switch" type="button" aria-pressed="false" aria-labelledby="paperLabel" disabled></button>
           </div>
         </div>
 

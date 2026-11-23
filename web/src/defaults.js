@@ -5,6 +5,7 @@ export const DEFAULT_LOOK = {
   edges: 110,
   mono: false,
   glow: true,
+  paper: false,
   sep: true,
 };
 

@@ -7,6 +7,8 @@ declare const __EXAMPLES__: {
   clip: string;
   source: string | null;
   sourceBytes: number;
+  paper?: boolean;
+  separate?: boolean;
 }[];
 declare module "gifenc" {
   export function GIFEncoder(): {

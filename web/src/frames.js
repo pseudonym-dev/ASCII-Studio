@@ -64,18 +64,31 @@ export function seekTo(video, t, timeoutMs = 8000) {
 
 /**
  * Point `video` at `url` and wait until its first frame is decoded.
- * @param {HTMLVideoElement} video @param {string} url
+ * iOS Safari loads only metadata and holds back frame data until the video plays, so a muted
+ * play/pause nudges it; the timeout turns any other stall into an error instead of a hang.
+ * @param {HTMLVideoElement} video @param {string} url @param {number} [timeoutMs]
  */
-export function openVideo(video, url) {
+export function openVideo(video, url, timeoutMs = 15000) {
   return new Promise((resolve, reject) => {
     const onLoaded = () => { cleanup(); resolve(undefined); };
     const onError = () => { cleanup(); reject(new Error("Couldn't open that video in this browser.")); };
+    const onMeta = () => {
+      if (video.readyState >= 2) return;
+      video.muted = true;
+      video.play?.()?.then(() => video.pause(), () => {});
+    };
+    const timer = setTimeout(() => { cleanup(); reject(new Error("This browser didn't load the video. Try another file or browser.")); }, timeoutMs);
     function cleanup() {
+      clearTimeout(timer);
       video.removeEventListener("loadeddata", onLoaded);
+      video.removeEventListener("loadedmetadata", onMeta);
       video.removeEventListener("error", onError);
     }
     video.addEventListener("loadeddata", onLoaded);
+    video.addEventListener("loadedmetadata", onMeta);
     video.addEventListener("error", onError);
+    video.preload = "auto";
     video.src = url;
+    video.load?.();
   });
 }
