@@ -1,0 +1,50 @@
+clownfish-real.jpg
+  Title:  Purple anemone (Heteractis magnifica) and resident anemonefish
+          (Amphiprion ocellaris) in East Timor
+  Author: Nick Hobgood (Nhobgood)
+  Source: https://commons.wikimedia.org/wiki/File:Anemone_purple_anemonefish.jpg
+  License: Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)
+           https://creativecommons.org/licenses/by-sa/3.0/
+  Notes:  Featured picture on Wikimedia Commons. 1803×2254, JPEG.
+
+web/assets/demo.jpg
+  Same photograph as clownfish-real.jpg (Nick Hobgood, CC BY-SA 3.0), resized
+  to 1000×1250 and saved as a smaller JPEG. Used as the in-app Sample image.
+
+clownfish-video.mp4
+  Title:  Weissrücken-Anemonenfisch - Amphiprion akallopisos.webm
+  Author: Amada44
+  Source: https://commons.wikimedia.org/wiki/File:Weissr%C3%BCcken-Anemonenfisch_-_Amphiprion_akallopisos.webm
+  License: CC BY-SA 3.0
+           https://creativecommons.org/licenses/by-sa/3.0/
+  Notes:  6 s clip (starting at 4 s), scaled to 960 px wide, 24 fps, no audio, H.264 (1 s GOP).
+          Used by end-to-end tests.
+
+testsrc.mp4
+  Generated locally with ffmpeg (testsrc pattern), 640x360, 12 fps, 3 s.
+
+example-sea.mp4
+  Same source as clownfish-video.mp4 (Amada44, CC BY-SA 3.0). 4 s, 480×270, 24 fps, no audio, H.264.
+  Used as the "Clownfish" example in ASCII Studio (click to open in the editor).
+
+example-dance.mp4
+  Title:  Scissor Dance, Peru
+  Author: Chris Gill
+  Source: https://commons.wikimedia.org/wiki/File:Scissor_Dance,_Peru.webm
+  License: CC BY 3.0
+           https://creativecommons.org/licenses/by/3.0/
+  Notes:  4 s excerpt starting at 12 s of the original, scaled to 480 px wide, 24 fps, no audio, H.264.
+          Used as the "Scissor dance, Peru" example in ASCII Studio.
+
+example-fire.mp4
+  Title:  ABO 2015 - Video of a fire in the fireplace
+  Author: BrillLyle
+  Source: https://commons.wikimedia.org/wiki/File:ABOedit2015-Video-Fire.webm
+  License: CC0 1.0 (public domain dedication)
+           https://creativecommons.org/publicdomain/zero/1.0/
+  Notes:  First 4 s, 480×480, 24 fps, no audio, H.264.
+          Used as the "Fireplace" example in ASCII Studio.
+
+web/assets/examples/{sea,dance,fire}.bin.gz
+  Pre-rendered ASCII grids of the three example clips (48 columns, 12 fps, 4 s), packed and gzipped.
+  Same authors and licenses as the source clips; they are adaptations of those videos.

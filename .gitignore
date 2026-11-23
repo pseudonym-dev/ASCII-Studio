@@ -1,0 +1,4 @@
+node_modules/
+artifacts/
+web/ascii-studio.html
+web/*.png

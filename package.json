@@ -1,0 +1,25 @@
+{
+  "name": "ascii-studio",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "build": "node tools/build.mjs",
+    "lint": "eslint web/src test tools",
+    "typecheck": "tsc -p web/tsconfig.json",
+    "test": "node --test test/unit/*.test.mjs",
+    "test:e2e": "node test/e2e/run.mjs",
+    "verify": "npm run lint && npm run typecheck && npm test && npm run build && npm run test:e2e"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^26.6.6",
+    "esbuild": "^0.28.2",
+    "eslint": "^10.15.0",
+    "gifenc": "^1.0.3",
+    "globals": "^17.14.0",
+    "mp4-muxer": "^5.2.2",
+    "typescript": "^7.0.2",
+    "webm-muxer": "^5.1.4"
+  }
+}
