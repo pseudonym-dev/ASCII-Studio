@@ -47,12 +47,12 @@ try {
   check("starts on the home screen, with the stage hidden and the sidebar visible", await b.ev("ASCII.mode === 'home' && document.body.classList.contains('home') && " + sidebarIdle));
   check("the empty sidebar shows the starting look, disabled", await b.ev(defaultLook));
   check("no media is loaded until the user chooses a file", await b.ev("(ASCII.stats.renders || 0) === 0"));
-  check("the drop zone explains what to do", await b.ev("document.getElementById('dropzone').textContent.includes('Drop a video or image here') && document.getElementById('dropzone').textContent.includes('15 s') && document.getElementById('dropzone').textContent.includes('100 MB')"));
+  check("the drop zone explains what to do", await b.ev("document.getElementById('dropzone').textContent.includes('Click to upload') && document.getElementById('dropzone').textContent.includes('drag and drop') && document.getElementById('dropzone').textContent.includes('15 s') && document.getElementById('dropzone').textContent.includes('100 MB')"));
   check("choose file lives in the drop zone on home", await b.ev("document.getElementById('dropzone').contains(document.getElementById('homeFileBtn')) && getComputedStyle(document.getElementById('fileBtn')).display === 'none'"));
-  check("three example clips are listed under the drop zone", await b.ev("document.querySelectorAll('#exampleGrid canvas').length === 3"));
+  check("six example clips are listed under the drop zone", await b.ev("document.querySelectorAll('#exampleGrid canvas').length === 6"));
   check("examples are visible without scrolling", await b.ev("(() => { const r = document.getElementById('examples').getBoundingClientRect(); return r.top >= 44 && r.top < innerHeight && r.bottom > r.top; })()"), await b.ev("String(document.getElementById('examples').getBoundingClientRect().top)"));
   check("the sidebar hint says a file can be dropped anywhere on the page", await b.ev("document.querySelector('#sidebarControls > .hint').textContent.includes('anywhere on this page') && !document.getElementById('sidebar').textContent.includes('dark area')"));
-  check("example credits name the authors", await b.ev("['Eaktas06','ahrordzon','xBriantcx'].every((n) => document.getElementById('exampleGrid').textContent.includes(n))"));
+  check("example credits name the authors", await b.ev("['Eaktas06','ASCII Studio','NickyPe','Paul_Tran','christianbodhi'].every((n) => document.getElementById('exampleGrid').textContent.includes(n))"));
   check("visible examples start playing", await waitFor("[...document.querySelectorAll('#exampleGrid canvas')].some((c) => c.dataset.ready === '1')", 10000));
   check("example cards share a 16:9 frame", await b.ev("[...document.querySelectorAll('.example-stage')].every((c) => Math.abs(c.clientWidth / c.clientHeight - 16/9) < 0.05)"));
   check("example letters are painted, not a blank card", await b.ev("(() => { const c = document.querySelector('#exampleGrid canvas'); const d = c.getContext('2d').getImageData(0,0,c.width,c.height).data; return [...d].some((v, i) => i % 4 !== 3 && v > 20); })()"));
